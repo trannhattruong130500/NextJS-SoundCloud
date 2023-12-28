@@ -7,11 +7,18 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import './wave.scss';
 import { Tooltip } from '@mui/material';
+import { sendRequest } from '@/utils/api';
 
-const WaveTrack = () => {
+interface IProps {
+    track: ITrackTop | null;
+}
+
+const WaveTrack = (props: IProps) => {
+    const { track } = props
     const [isPlaying, setIsPlaying] = useState(false)
     const searchParams = useSearchParams()
     const fileName = searchParams.get('audio')
+    const id = searchParams.get('id');
     const containerRef = useRef<HTMLDivElement>(null)
     const [time, setTime] = useState<string>('0:00')
     const [duration, setDuration] = useState<string>('0:00')
@@ -111,7 +118,7 @@ const WaveTrack = () => {
     }
 
     return (
-        <div style={{ marginTop: '100px' }}>
+        <div style={{ marginTop: '30px' }}>
             <div style={{
                 display: "flex",
                 gap: 15,
@@ -154,7 +161,7 @@ const WaveTrack = () => {
                                 fontSize: 30,
                                 width: "fit-content",
                                 color: "white"
-                            }}>hoi dan it</div>
+                            }}>{track?.title}</div>
                             <div style={{
                                 padding: "0 5px",
                                 marginTop: 10,
@@ -162,7 +169,7 @@ const WaveTrack = () => {
                                 fontSize: 20,
                                 width: "fit-content",
                                 color: "white"
-                            }}>Eric</div>
+                            }}>{track?.description}</div>
                         </div>
                     </div>
                     <div ref={containerRef} className='wave-form-container'>
@@ -182,7 +189,7 @@ const WaveTrack = () => {
                         <div className='comment' style={{ position: 'relative' }}>
                             {arrComments.map((item) => {
                                 return (
-                                    <Tooltip title={item.content} arrow>
+                                    <Tooltip title={item.content} arrow key={item.id}>
                                         <img key={item.id}
                                             onPointerMove={(e) => {
                                                 const hover = hoverRef.current!

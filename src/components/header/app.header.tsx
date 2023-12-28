@@ -20,6 +20,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -63,6 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
+    const { data: session } = useSession()
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -105,10 +107,10 @@ export default function AppHeader() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <Link href="/profile" style={{ color: "unset", textDecoration: "none" }}>
+            <Link href={`/profile/${session?.user._id}`} style={{ color: "unset", textDecoration: "none" }}>
                 <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             </Link>
-            <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(), signOut() }}>Log out</MenuItem>
         </Menu>
     );
 
@@ -212,13 +214,23 @@ export default function AppHeader() {
                                 textDecoration: "unset"
                             }
                         }}>
-                            <Link href="/playlist">Playlist</Link>
-                            <Link href="/likes">Likes</Link>
-                            <span>Upload</span>
-                            <Avatar
-                                onClick={handleProfileMenuOpen}
-                            >TR
-                            </Avatar>
+                            {
+                                session ?
+                                    <>
+                                        <Link href="/playlist">Playlist</Link>
+                                        <Link href="/likes">Likes</Link>
+                                        <Link href="/track/upload">Upload</Link>
+                                        <Avatar
+                                            onClick={handleProfileMenuOpen}
+                                        >TR
+                                        </Avatar>
+                                    </>
+                                    :
+                                    <>
+                                        <Link href={'/auth/signin'}>Login</Link>
+                                    </>
+                            }
+
                         </Box>
                         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                             <IconButton

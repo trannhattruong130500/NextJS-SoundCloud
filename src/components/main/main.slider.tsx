@@ -17,7 +17,6 @@ interface IProps {
 
 const MainSlider = (props: IProps) => {
     const { data, title } = props
-
     const NextArrow = (props: any) => {
         return (
             <Button variant="contained" color="inherit"
@@ -88,11 +87,10 @@ const MainSlider = (props: IProps) => {
                 {data.map(track => {
                     return (
                         <div className="track" key={track._id}>
-
                             <div className="content">
-                                <Link href={`/track/${track._id}?audio=${track.trackUrl}`}>
+                                <Link href={`/track/${track._id}?audio=${track.trackUrl}&id=${track._id}`}>
                                     <div className="img">
-                                        <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`} />
+                                        <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}images/${track.imgUrl}`} />
                                     </div>
                                     <h4>{track.title}</h4>
                                 </Link>
